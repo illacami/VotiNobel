@@ -27,6 +27,9 @@ public class FXMLController {
     private TextField txtInput;
     
     @FXML
+    private Button btnCalcola;
+    
+    @FXML
     private TextArea txtResult;
 
     @FXML
@@ -69,6 +72,7 @@ public class FXMLController {
     @FXML
     void initialize() {
         assert txtInput != null : "fx:id=\"txtInput\" was not injected: check your FXML file 'VotiNobel.fxml'.";
+        assert btnCalcola != null : "fx:id=\"btnCalcola\" was not injected: check your FXML file 'Scene.fxml'.";
         assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'VotiNobel.fxml'.";
         assert btnReset != null : "fx:id=\"btnReset\" was not injected: check your FXML file 'VotiNobel.fxml'.";
     }

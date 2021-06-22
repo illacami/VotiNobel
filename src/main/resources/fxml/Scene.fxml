@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="442.0" prefWidth="561.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.nobel.FXMLController">
+<BorderPane prefHeight="442.0" prefWidth="561.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.nobel.FXMLController">
    <top>
       <Label text="Voti Nobel" BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -34,7 +34,7 @@
                         <Insets right="20.0" />
                      </HBox.margin>
                   </TextField>
-                  <Button mnemonicParsing="false" onAction="#doCalcolaCombinazione" text="Calcola migliore combinazione" />
+                  <Button fx:id="btnCalcola" mnemonicParsing="false" onAction="#doCalcolaCombinazione" text="Calcola migliore combinazione" />
                </children>
             </HBox>
             <TextArea fx:id="txtResult" editable="false" prefHeight="251.0" prefWidth="478.0">
@@ -59,12 +59,3 @@
       </Button>
    </bottom>
 </BorderPane>
-
-
-
-
-
-
-
-
-

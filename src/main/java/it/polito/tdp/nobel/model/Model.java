@@ -1,6 +1,8 @@
 package it.polito.tdp.nobel.model;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,111 +16,71 @@ public class Model {
 	
 	public Model() {
 		EsameDAO dao = new EsameDAO();
+		this.partenza = new LinkedList<Esame>();
 		this.partenza = dao.getTuttiEsami();
 	}
 	
 	public Set<Esame> calcolaSottoinsiemeEsami(int numeroCrediti) {
 		
-		Set<Esame> parziale = new HashSet<Esame>();
+		Set<Esame> parziale = new LinkedHashSet<Esame>();
 		
 		soluzioneMigliore = new HashSet<Esame>();
-		
 		mediaSoluzioneMigliore = 0;
 		
-		//cerca(parziale, 0, numeroCrediti);
-		cerca2(parziale, 0, numeroCrediti);
+		this.cerca2(parziale, numeroCrediti, 0);
+		
+		
 		return soluzioneMigliore;
 	}
-	private void cerca2(Set<Esame> parziale, int L, int m) {
+	
+	private void cerca2(Set<Esame> parziale, int numCrediti, int livello) {
 		
-		//casi terminali
-		
-		//quando la somma dei crediti sfora
-		int crediti = sommaCrediti(parziale);
-		
-		if(crediti > m) {
+		// caso terminale 
+		// 1) ho occupato tutti i crediti
+		// 2) soluzione migliore
+		if(sommaCrediti(parziale) > numCrediti) {
 			return;
 		}
 		
-		if(crediti == m) {
-			double media = calcolaMedia(parziale);
-			if(media> mediaSoluzioneMigliore) {
-				soluzioneMigliore = new HashSet<>(parziale);
-				mediaSoluzioneMigliore = media;
+		if(sommaCrediti(parziale) == numCrediti) {
+			if(calcolaMedia(parziale) > this.mediaSoluzioneMigliore) {
+				soluzioneMigliore = new HashSet<Esame>(parziale);
+				mediaSoluzioneMigliore = calcolaMedia(parziale);
 			}
 			return;
 		}
-		//se arrivo qui, sicuramente crediti < m
 		
-		//raggiungiamo la fine dei livelli (L=N) non ci sono più esami da aggiungere
-		if(L == partenza.size()) {
+		if(livello == partenza.size())
 			return;
-		}
+	
+		parziale.add(partenza.get(livello));
+		cerca2(parziale, numCrediti, livello+1);
 		
-		//sottoproblemi
-		parziale.add(partenza.get(L));
-		cerca2(parziale, L+1, m);
-		
-		parziale.remove(partenza.get(L));
-		cerca2(parziale, L+1, m);
+		parziale.remove(partenza.get(livello));
+		cerca2(parziale, numCrediti, livello+1);
 	}
 	
-	private void cerca1(Set<Esame> parziale, int L, int m) {
+	private void cerca1() {
 		
-		//casi terminali
-		
-		//quando la somma dei crediti sfora
-		int crediti = sommaCrediti(parziale);
-		
-		if(crediti > m) {
-			return;
-		}
-		
-		if(crediti == m) {
-			double media = calcolaMedia(parziale);
-			if(media> mediaSoluzioneMigliore) {
-				soluzioneMigliore = new HashSet<>(parziale);
-				mediaSoluzioneMigliore = media;
-			}
-			return;
-		}
-		//se arrivo qui, sicuramente crediti < m
-		
-		//raggiungiamo la fine dei livelli (L=N) non ci sono più esami da aggiungere
-		if(L == partenza.size()) {
-			return;
-		}
-		
-		//sottoproblemi
-		for(Esame e : partenza) {
-			if(!parziale.contains(e)) {
-				parziale.add(e);
-				cerca1(parziale, L+1, m);
-				parziale.remove(e);
-			}
-		}
 	}
 
 	public double calcolaMedia(Set<Esame> esami) {
 		
-		int crediti = 0;
-		int somma = 0;
+		double somma = 0.0;
+		for(Esame e : esami)
+			somma += e.getVoto();
 		
-		for(Esame e : esami){
-			crediti += e.getCrediti();
-			somma += (e.getVoto() * e.getCrediti());
-		}
+		return somma/esami.size();
 		
-		return somma/crediti;
 	}
 	
 	public int sommaCrediti(Set<Esame> esami) {
-		int somma = 0;
 		
+		int crediti = 0;
 		for(Esame e : esami)
-			somma += e.getCrediti();
+			crediti += e.getCrediti();
 		
-		return somma;
+		return crediti;
 	}
 
 }
